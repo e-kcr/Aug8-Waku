@@ -1,0 +1,1190 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>e-Rise わくわく Summer Day</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&amp;family=Nunito:wght@500;700;800;900&amp;family=M+PLUS+Rounded+1c:wght@700;800;900&amp;display=swap" rel="stylesheet">
+
+<!--
+  ================================================================
+  📖 HOW TO EDIT THIS PAGE
+  ================================================================
+  This page now has a built-in visual editor! Click the "🔧 Edit
+  Page" button (top right) and enter the PIN (default: 1234, change
+  it in siteData below) to:
+    - Add / edit / delete games
+    - Add / edit / delete photos & videos
+    - Edit event details (dates, programs, class schedule, fee)
+
+  ⚠️ IMPORTANT: this is a static HTML page with no server, so edits
+  made in the visual editor are saved to YOUR browser only (using
+  localStorage) — they are NOT automatically visible to site
+  visitors. When you're happy with your changes, click
+  "⬇️ Download Updated Page" in the edit toolbar — this saves a new,
+  complete HTML file with your changes baked in. Upload THAT file to
+  your website to make the changes go live for everyone.
+
+  You can also still edit everything by hand in the code: all the
+  content lives in the "siteData" JSON block near the top of the
+  <script> at the bottom of this file.
+  ================================================================
+-->
+
+<style>
+  :root{
+    --pink:#e6337f; --blue:#1e56c8; --orange:#f5941f; --yellow:#ffd93d;
+    --green:#4caf50; --red:#e8432e; --navy:#16255c; --ink:#2b2b2b; --cream:#fffaf0;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:'Nunito','M PLUS Rounded 1c',sans-serif;
+    background:linear-gradient(180deg,#eaf4ff 0%, #fdf8ec 45%, #fdeee0 100%);
+    color:var(--ink); position:relative; overflow-x:hidden;
+  }
+  .jp{font-family:'M PLUS Rounded 1c','Nunito',sans-serif;}
+  h1,h2,h3,.display{font-family:'Baloo 2','M PLUS Rounded 1c',cursive;}
+  a{color:inherit;}
+  img{max-width:100%;display:block;}
+
+  #bokeh{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
+  .glow{position:absolute;border-radius:50%;filter:blur(38px);opacity:.32;}
+  #floaters{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
+  .floater{position:absolute;bottom:-40px;font-size:1.6rem;opacity:.55;animation:floatUp linear infinite;}
+  @keyframes floatUp{0%{transform:translateY(0) rotate(0deg);opacity:0;}10%{opacity:.55;}90%{opacity:.55;}100%{transform:translateY(-112vh) rotate(20deg);opacity:0;}}
+
+  #bunting{display:flex;justify-content:center;gap:0;margin:6px 0 0;position:relative;z-index:2;}
+  .flag{width:26px;height:32px;clip-path:polygon(0 0, 100% 0, 50% 100%);animation:flagSway 2.6s ease-in-out infinite;}
+  .flag:nth-child(3n+1){background:var(--blue);}
+  .flag:nth-child(3n+2){background:var(--yellow);}
+  .flag:nth-child(3n+3){background:var(--pink);}
+  @keyframes flagSway{0%,100%{transform:rotate(-3deg);}50%{transform:rotate(3deg);}}
+
+  .wrap{position:relative;z-index:2;max-width:1100px;margin:0 auto;padding:0 24px;}
+
+  #topbar{display:flex;align-items:center;justify-content:space-between;padding:20px 0;gap:14px;flex-wrap:wrap;}
+  #logo{display:flex;align-items:center;gap:8px;}
+  #logo img{height:36px;width:auto;}
+  #topbar-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+
+  .btn{
+    font-family:'Baloo 2','M PLUS Rounded 1c',cursive;font-weight:800;font-size:1rem;
+    padding:11px 24px;border:none;border-radius:50px;cursor:pointer;text-decoration:none;
+    display:inline-block;color:#fff;
+    background:linear-gradient(180deg, var(--pink), #b81f5f);
+    box-shadow:0 5px 0 #8f1849, 0 8px 16px rgba(0,0,0,.15);
+    transition:transform .12s ease;
+  }
+  .btn:hover{transform:translateY(-2px) scale(1.03);}
+  .btn:active{transform:translateY(3px);box-shadow:0 2px 0 #8f1849;}
+  .btn.blue{background:linear-gradient(180deg,#3f78e0,var(--blue));box-shadow:0 5px 0 #123d94,0 8px 16px rgba(0,0,0,.15);}
+  .btn.yellow{background:linear-gradient(180deg,#ffe37a,var(--yellow));box-shadow:0 5px 0 #c9a326,0 8px 16px rgba(0,0,0,.15);color:#5c4200;}
+  .btn.green{background:linear-gradient(180deg,#6bc770,var(--green));box-shadow:0 5px 0 #2e7d32,0 8px 16px rgba(0,0,0,.15);}
+  .btn.small{padding:9px 18px;font-size:.88rem;}
+  .btn.ghost-pill{background:rgba(255,255,255,.7);box-shadow:none;border:1px solid var(--blue);color:var(--blue);}
+  .btn.icon-only{padding:9px 13px;font-size:1rem;}
+
+  /* ---------------- Hero (uses the real event banner image) ---------------- */
+  #hero{text-align:center;padding:14px 0 8px;}
+  #hero .banner-frame{max-width:900px;margin:0 auto;border-radius:20px;overflow:hidden;box-shadow:0 18px 40px rgba(30,40,90,.22);}
+  #hero p.tagline{font-size:clamp(1rem,2.2vw,1.25rem);max-width:580px;margin:20px auto 22px;line-height:1.55;font-weight:700;color:#4a4a4a;}
+  #hero .hero-actions{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
+
+  /* ---------------- Photobooth promo ---------------- */
+  #photobooth{padding:34px 0 10px;}
+  .photobooth-card{
+    background:#fff;border-radius:26px;padding:26px;display:flex;align-items:center;gap:26px;
+    box-shadow:0 16px 34px rgba(0,0,0,.12);max-width:760px;margin:0 auto;
+  }
+  .photobooth-card img{width:130px;height:auto;flex-shrink:0;}
+  .photobooth-text{text-align:left;}
+  .photobooth-text h3{margin:0 0 6px;color:var(--navy);font-size:1.35rem;}
+  .photobooth-text p{margin:0 0 14px;color:#555;font-weight:700;font-size:.95rem;}
+  @media (max-width:560px){ .photobooth-card{flex-direction:column;text-align:center;} .photobooth-text{text-align:center;} .photobooth-card img{width:100px;} }
+
+  .section-title{text-align:center;margin:0 0 8px;font-size:clamp(1.7rem,4.4vw,2.5rem);color:var(--navy);}
+  .section-sub{text-align:center;opacity:.85;margin:0 0 30px;font-size:1.05rem;font-weight:700;color:#555;}
+
+  #dates{padding:30px 0 50px;}
+  .dates-card{background:#fff;border:2px solid var(--blue);border-radius:24px;padding:28px 24px;max-width:760px;margin:0 auto;box-shadow:0 14px 30px rgba(30,86,200,.15);position:relative;}
+  .dates-badge{position:absolute;top:-26px;left:-16px;background:var(--yellow);color:var(--pink);width:100px;height:100px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:'Baloo 2','M PLUS Rounded 1c',cursive;font-weight:900;box-shadow:0 8px 18px rgba(0,0,0,.2);transform:rotate(-8deg);line-height:1.1;text-align:center;}
+  .dates-badge .small{font-size:.7rem;}
+  .dates-badge .big{font-size:1.35rem;}
+  .dates-grid{display:flex;justify-content:center;gap:20px;flex-wrap:wrap;margin-top:10px;}
+  .date-item{text-align:center;padding:10px 18px;}
+  .date-item .d{font-family:'Baloo 2','M PLUS Rounded 1c',cursive;font-weight:900;font-size:clamp(1.6rem,5vw,2.1rem);color:var(--navy);}
+  .date-item .dl{color:var(--pink);font-weight:800;font-size:.95rem;margin-top:4px;}
+  .dates-divider{width:2px;background:repeating-linear-gradient(180deg,var(--blue) 0 4px, transparent 4px 8px);}
+  .dates-note{text-align:center;margin-top:16px;font-weight:700;color:#555;font-size:.92rem;}
+
+  #programs{padding:10px 0 55px;}
+  .program-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:24px;}
+  .program-card{background:#fff;border-radius:22px;overflow:hidden;box-shadow:0 14px 30px rgba(0,0,0,.12);}
+  .program-head{padding:12px;text-align:center;font-family:'Baloo 2','M PLUS Rounded 1c',cursive;font-weight:800;color:#fff;font-size:1.05rem;}
+  .program-card.p1 .program-head{background:var(--pink);}
+  .program-card.p2 .program-head{background:var(--green);}
+  .program-card.p3 .program-head{background:var(--blue);}
+  .program-visual{aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;font-size:3.4rem;background:linear-gradient(135deg,#fef3f7,#eef6ff);}
+  .program-card.p2 .program-visual{background:linear-gradient(135deg,#eefaf0,#eef6ff);}
+  .program-body{padding:16px 18px 20px;text-align:center;font-weight:700;color:#444;line-height:1.5;font-size:.95rem;}
+
+  #beginner-banner{text-align:center;padding:6px 0 30px;}
+  #beginner-banner .badge-title{display:inline-flex;align-items:center;gap:10px;font-family:'Baloo 2','M PLUS Rounded 1c',cursive;font-weight:900;font-size:clamp(1.3rem,3.6vw,1.8rem);color:var(--navy);}
+  #beginner-banner .sub{margin-top:6px;font-weight:700;color:#555;}
+
+  #logistics{padding:0 0 55px;}
+  .logistics-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;}
+  @media (max-width:760px){ .logistics-grid{grid-template-columns:1fr;} }
+  .logistics-card{background:#fff;border:2px solid var(--blue);border-radius:22px;overflow:hidden;box-shadow:0 14px 28px rgba(0,0,0,.1);}
+  .logistics-head{background:var(--navy);color:#fff;text-align:center;padding:12px;font-family:'Baloo 2','M PLUS Rounded 1c',cursive;font-weight:800;}
+  .logistics-body{padding:18px 20px;}
+  .class-sub{text-align:center;color:var(--blue);font-weight:800;font-size:.85rem;margin-bottom:10px;}
+  .class-row{display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px dashed #e2e2e2;}
+  .class-row:last-child{border-bottom:none;}
+  .class-badge{width:34px;height:34px;border-radius:8px;color:#fff;font-family:'Baloo 2',cursive;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:1.05rem;}
+  .class-badge.a{background:var(--pink);} .class-badge.b{background:var(--orange);} .class-badge.c{background:var(--green);} .class-badge.d{background:var(--blue);}
+  .class-time{font-weight:800;color:var(--navy);min-width:118px;font-size:.92rem;}
+  .class-desc{color:#555;font-weight:700;font-size:.9rem;}
+  .conditions-body{text-align:center;padding:20px;}
+  .fee-label{font-family:'Baloo 2','M PLUS Rounded 1c',cursive;font-weight:800;color:#555;font-size:1rem;}
+  .fee-value{font-family:'Baloo 2','M PLUS Rounded 1c',cursive;font-weight:900;color:var(--red);font-size:clamp(2rem,7vw,2.8rem);margin:4px 0 14px;}
+  .age-condition{font-weight:800;color:var(--green);font-size:1.05rem;line-height:1.5;margin-bottom:14px;}
+  .capacity-note{display:inline-block;background:var(--yellow);color:#5c4200;font-weight:800;padding:6px 14px;border-radius:10px;font-size:.82rem;}
+
+  #games{padding:10px 0 55px;}
+  .games-intro{max-width:640px;margin:0 auto 30px;text-align:center;background:#fff;border-radius:18px;padding:14px 20px;box-shadow:0 8px 20px rgba(0,0,0,.08);font-weight:700;color:#555;font-size:.95rem;}
+  .mode-title{text-align:center;font-family:'Baloo 2','M PLUS Rounded 1c',cursive;font-weight:800;font-size:1.25rem;margin:30px 0 18px;color:var(--navy);display:flex;align-items:center;justify-content:center;gap:10px;}
+  .mode-title .pill{background:#fff;border:1px solid #ddd;padding:4px 16px;border-radius:20px;font-size:1.1rem;box-shadow:0 4px 10px rgba(0,0,0,.08);}
+  .game-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:22px;}
+  .game-card{background:#fff;color:var(--ink);border-radius:22px;padding:24px 20px;text-align:center;box-shadow:0 14px 28px rgba(0,0,0,.1);position:relative;overflow:hidden;transition:transform .18s ease, box-shadow .18s ease;}
+  .game-card:hover{transform:translateY(-6px) rotate(-1deg);box-shadow:0 20px 38px rgba(0,0,0,.16);}
+  .game-card .ribbon{position:absolute;top:14px;right:-34px;transform:rotate(40deg);color:#fff;font-family:'Baloo 2',cursive;font-weight:700;font-size:.7rem;padding:4px 40px;box-shadow:0 3px 6px rgba(0,0,0,.2);}
+  .game-card .icon{font-size:3rem;margin-bottom:8px;}
+  .game-card h3{margin:0 0 8px;font-size:1.2rem;}
+  .game-card p{font-size:.9rem;line-height:1.5;opacity:.85;margin:0 0 16px;min-height:58px;}
+  .game-card .btn{width:100%;color:#fff;}
+  .item-edit-controls{position:absolute;top:8px;left:8px;display:none;gap:6px;z-index:5;}
+  .edit-mode .item-edit-controls{display:flex;}
+  .item-edit-controls button{width:28px;height:28px;border-radius:8px;border:none;cursor:pointer;font-size:.85rem;box-shadow:0 3px 6px rgba(0,0,0,.25);}
+  .item-edit-controls .edit-btn{background:var(--yellow);}
+  .item-edit-controls .del-btn{background:#ff6b6b;color:#fff;}
+
+  #about{padding:10px 0 55px;}
+  .about-card{background:#fff;border-radius:24px;padding:36px;display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:center;box-shadow:0 14px 30px rgba(0,0,0,.1);}
+  .about-card .about-text h2{margin-top:0;color:var(--navy);}
+  .about-card .about-text p{line-height:1.6;color:#555;}
+  .feature-list{list-style:none;padding:0;margin:18px 0 24px;}
+  .feature-list li{padding:8px 0;display:flex;gap:10px;align-items:flex-start;font-weight:700;color:#444;}
+  .feature-list li .tick{color:var(--green);font-weight:900;}
+  .about-photo{background:linear-gradient(135deg,#fef3f7,#eef6ff);border-radius:18px;min-height:220px;display:flex;align-items:center;justify-content:center;font-size:4rem;overflow:hidden;}
+  @media (max-width:760px){ .about-card{grid-template-columns:1fr;} }
+
+  #gallery{padding:10px 0 55px;}
+  .media-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;}
+  .media-item{border-radius:16px;overflow:hidden;background:#fff;box-shadow:0 10px 22px rgba(0,0,0,.1);position:relative;}
+  .media-frame{aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#fef3f7,#eef6ff);font-size:2.2rem;color:#bbb;}
+  .media-frame img, .media-frame video{width:100%;height:100%;object-fit:cover;}
+  .media-frame iframe{width:100%;height:100%;border:0;}
+  .media-caption{padding:10px 14px;font-size:.88rem;color:#555;font-weight:700;}
+  .add-card{display:flex;align-items:center;justify-content:center;background:#fff;border:3px dashed #cfd8ea;border-radius:16px;min-height:160px;cursor:pointer;color:var(--blue);font-weight:800;font-family:'Baloo 2',cursive;font-size:1rem;flex-direction:column;gap:6px;}
+  .add-card .plus{font-size:2rem;}
+
+  #contact{padding:10px 0 40px;text-align:center;}
+  .contact-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;max-width:760px;margin:30px auto 0;}
+  .contact-item{background:#fff;border-radius:16px;padding:18px;box-shadow:0 10px 22px rgba(0,0,0,.08);}
+  .contact-item .label{font-family:'Baloo 2','M PLUS Rounded 1c',cursive;color:var(--pink);font-weight:800;font-size:.85rem;margin-bottom:4px;}
+  .contact-item .value{font-size:.95rem;color:#444;font-weight:700;}
+  footer{text-align:center;padding:26px 0 40px;opacity:.6;font-size:.85rem;color:#555;}
+  footer img{height:26px;margin:0 auto 10px;opacity:.85;}
+
+  /* ================= EDIT MODE UI ================= */
+  #editToolbar{
+    display:none;position:sticky;top:0;left:0;width:100%;z-index:100;
+    background:var(--navy);color:#fff;padding:10px 16px;box-shadow:0 4px 14px rgba(0,0,0,.3);
+  }
+  #editToolbar.active{display:flex;}
+  #editToolbar{align-items:center;gap:10px;flex-wrap:wrap;justify-content:center;}
+  #editToolbar .tag{font-family:'Baloo 2',cursive;font-weight:800;background:var(--red);padding:5px 14px;border-radius:20px;font-size:.85rem;}
+  #editToolbar button{
+    font-family:'Baloo 2',cursive;font-weight:700;font-size:.85rem;padding:7px 14px;border-radius:20px;border:none;cursor:pointer;
+    background:#fff;color:var(--navy);
+  }
+  #editToolbar button.danger{background:#ff6b6b;color:#fff;}
+  #editToolbar button.primary{background:var(--yellow);color:#5c4200;}
+
+  .modal-overlay{display:none;position:fixed;inset:0;background:rgba(20,25,50,.55);z-index:200;align-items:center;justify-content:center;padding:20px;}
+  .modal-overlay.active{display:flex;}
+  .modal-panel{background:#fff;border-radius:20px;max-width:560px;width:100%;max-height:88vh;overflow-y:auto;padding:26px;}
+  .modal-panel h2{margin-top:0;color:var(--navy);font-size:1.3rem;}
+  .modal-group-title{font-family:'Baloo 2',cursive;font-weight:800;color:var(--blue);margin:18px 0 8px;font-size:.95rem;border-top:2px dashed #eee;padding-top:14px;}
+  .modal-group-title:first-of-type{border-top:none;padding-top:0;}
+  .form-row{margin-bottom:12px;}
+  .form-row label{display:block;font-weight:800;font-size:.82rem;color:#555;margin-bottom:4px;}
+  .form-row input[type=text], .form-row input[type=color], .form-row select, .form-row textarea{
+    width:100%;padding:9px 12px;border-radius:10px;border:2px solid #e2e2e2;font-family:inherit;font-size:.92rem;
+  }
+  .form-row textarea{min-height:56px;resize:vertical;}
+  .form-row-2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:18px;flex-wrap:wrap;}
+  .modal-actions button{font-family:'Baloo 2',cursive;font-weight:800;padding:10px 20px;border-radius:20px;border:none;cursor:pointer;}
+  .modal-actions .save-btn{background:var(--green);color:#fff;}
+  .modal-actions .cancel-btn{background:#eee;color:#555;}
+
+  @media (max-width:600px){ #topbar{flex-direction:column;gap:14px;} .btn{padding:12px 22px;} }
+  @media (max-width:480px){ #bunting{gap:0;} .flag{width:16px;height:20px;} .dates-badge{width:80px;height:80px;top:-18px;left:-10px;} .dates-badge .big{font-size:1.05rem;} }
+</style>
+</head>
+<body>
+
+<!-- ================= EDIT MODE TOOLBAR ================= -->
+<div id="editToolbar" class="">
+  <span class="tag">🔧 EDIT MODE</span>
+  <button onclick="openEventDetailsModal()">📝 Edit Event Details</button>
+  <button onclick="openGameModal()">➕ Add Game</button>
+  <button onclick="openMediaModal()">➕ Add Photo/Video</button>
+  <button class="primary" onclick="downloadUpdatedPage()">⬇️ Download Updated Page</button>
+  <button class="danger" onclick="resetToDefaults()">↩️ Reset All</button>
+  <button onclick="exitEditMode()">✖️ Exit Edit Mode</button>
+</div>
+
+<div id="bokeh"><div class="glow" style="width: 199.136px; height: 199.136px; left: 88.3072%; top: 59.1696%; background: rgb(230, 51, 127);"></div><div class="glow" style="width: 134.456px; height: 134.456px; left: 57.3578%; top: 25.4715%; background: rgb(255, 217, 61);"></div><div class="glow" style="width: 189.844px; height: 189.844px; left: 57.1442%; top: 49.737%; background: rgb(76, 175, 80);"></div><div class="glow" style="width: 195.097px; height: 195.097px; left: 76.364%; top: 2.74645%; background: rgb(30, 86, 200);"></div><div class="glow" style="width: 110.648px; height: 110.648px; left: 86.6696%; top: 35.6959%; background: rgb(245, 148, 31);"></div><div class="glow" style="width: 174.813px; height: 174.813px; left: 1.36265%; top: 87.7455%; background: rgb(230, 51, 127);"></div><div class="glow" style="width: 239.263px; height: 239.263px; left: 76.9803%; top: 88.4721%; background: rgb(255, 217, 61);"></div><div class="glow" style="width: 152.813px; height: 152.813px; left: 25.9111%; top: 10.8053%; background: rgb(76, 175, 80);"></div><div class="glow" style="width: 121.591px; height: 121.591px; left: 15.3137%; top: 42.7834%; background: rgb(30, 86, 200);"></div><div class="glow" style="width: 152.717px; height: 152.717px; left: 42.5884%; top: 92.7944%; background: rgb(230, 51, 127);"></div><div class="glow" style="width: 171.444px; height: 171.444px; left: 79.7121%; top: 24.0071%; background: rgb(255, 217, 61);"></div><div class="glow" style="width: 175.911px; height: 175.911px; left: 34.4633%; top: 24.2626%; background: rgb(76, 175, 80);"></div><div class="glow" style="width: 215.784px; height: 215.784px; left: 70.7028%; top: 52.2311%; background: rgb(30, 86, 200);"></div><div class="glow" style="width: 189.396px; height: 189.396px; left: 39.3568%; top: 19.976%; background: rgb(245, 148, 31);"></div><div class="glow" style="width: 169.58px; height: 169.58px; left: 99.0537%; top: 61.6404%; background: rgb(230, 51, 127);"></div><div class="glow" style="width: 146.463px; height: 146.463px; left: 41.7004%; top: 85.1605%; background: rgb(255, 217, 61);"></div><div class="glow" style="width: 185.971px; height: 185.971px; left: 0.883738%; top: 47.0946%; background: rgb(76, 175, 80);"></div><div class="glow" style="width: 126.678px; height: 126.678px; left: 4.31162%; top: 72.6705%; background: rgb(30, 86, 200);"></div></div>
+<div id="floaters"><div class="floater" style="left: 89.5094%; animation-duration: 22.7795s; animation-delay: 2.99956s;">🌻</div><div class="floater" style="left: 88.998%; animation-duration: 19.2726s; animation-delay: 3.17455s;">☀️</div><div class="floater" style="left: 54.4071%; animation-duration: 19.6682s; animation-delay: 9.65643s;">🐚</div><div class="floater" style="left: 42.9153%; animation-duration: 22.3815s; animation-delay: 6.87691s;">🌊</div><div class="floater" style="left: 13.0585%; animation-duration: 23.9979s; animation-delay: 8.67055s;">✨</div><div class="floater" style="left: 31.9706%; animation-duration: 18.2312s; animation-delay: 0.142174s;">🍧</div><div class="floater" style="left: 67.9857%; animation-duration: 18.1688s; animation-delay: 13.531s;">🌻</div><div class="floater" style="left: 11.4581%; animation-duration: 23.7836s; animation-delay: 4.64011s;">☀️</div><div class="floater" style="left: 39.2789%; animation-duration: 14.4078s; animation-delay: 11.4033s;">🐚</div><div class="floater" style="left: 90.7315%; animation-duration: 23.5446s; animation-delay: 9.77262s;">🌊</div><div class="floater" style="left: 30.934%; animation-duration: 21.3791s; animation-delay: 13.5082s;">✨</div><div class="floater" style="left: 6.00133%; animation-duration: 15.2564s; animation-delay: 13.9593s;">🍧</div><div class="floater" style="left: 52.4374%; animation-duration: 14.303s; animation-delay: 10.1151s;">🌻</div><div class="floater" style="left: 1.97621%; animation-duration: 21.8417s; animation-delay: 1.74269s;">☀️</div><div class="floater" style="left: 65.4081%; animation-duration: 19.123s; animation-delay: 11.5214s;">🌻</div><div class="floater" style="left: 99.3784%; animation-duration: 18.1922s; animation-delay: 11.6678s;">☀️</div><div class="floater" style="left: 5.1291%; animation-duration: 22.3643s; animation-delay: 2.59671s;">🐚</div><div class="floater" style="left: 53.5642%; animation-duration: 16.5778s; animation-delay: 10.6283s;">🌊</div><div class="floater" style="left: 33.0492%; animation-duration: 21.7014s; animation-delay: 4.27549s;">✨</div><div class="floater" style="left: 33.9986%; animation-duration: 16.2492s; animation-delay: 12.6456s;">🍧</div><div class="floater" style="left: 25.1131%; animation-duration: 22.073s; animation-delay: 8.88071s;">🌻</div><div class="floater" style="left: 48.9945%; animation-duration: 19.331s; animation-delay: 6.78701s;">☀️</div><div class="floater" style="left: 50.4007%; animation-duration: 18.3564s; animation-delay: 11.2936s;">🐚</div><div class="floater" style="left: 65.8071%; animation-duration: 22.849s; animation-delay: 6.79144s;">🌊</div><div class="floater" style="left: 98.2558%; animation-duration: 16.641s; animation-delay: 5.19814s;">✨</div><div class="floater" style="left: 35.725%; animation-duration: 20.1025s; animation-delay: 9.87312s;">🍧</div><div class="floater" style="left: 97.0333%; animation-duration: 16.8006s; animation-delay: 8.94376s;">🌻</div><div class="floater" style="left: 85.6186%; animation-duration: 17.1648s; animation-delay: 13.6409s;">☀️</div></div>
+
+<div class="wrap">
+
+  <div id="topbar">
+    <div id="logo">
+      <img src="erise-logo.png" alt="e-Rise logo" style="height:34px;width:auto;">
+    </div>
+    <div id="topbar-actions">
+      <button class="btn ghost-pill small icon-only" onclick="tryEnterEditMode()" title="Admin / Edit">🔧</button>
+      <button class="btn ghost-pill small" id="langToggleBtn" onclick="toggleLang()">日本語</button>
+      <a class="btn blue small" id="enrollBtnTop" href="https://www.erise-school.com/">Register</a>
+    </div>
+  </div>
+
+  <div id="bunting">
+    <div class="flag"></div><div class="flag"></div><div class="flag"></div><div class="flag"></div>
+    <div class="flag"></div><div class="flag"></div><div class="flag"></div><div class="flag"></div>
+    <div class="flag"></div><div class="flag"></div><div class="flag"></div><div class="flag"></div>
+  </div>
+
+  <!-- ================= HERO — uses the real event banner image ================= -->
+  <div id="hero">
+    <div class="banner-frame"><img src="erise-event-banner.png" alt="e-Rise わくわく Summer Day"></div>
+    <p class="tagline" id="ed-tagline">e-Rise's special summer event — English, programming, and snacks! Let's have fun together.</p>
+    <div class="hero-actions">
+      <a class="btn" href="#dates" data-i18n="seeDatesBtn">📅 See the Dates</a>
+      <a class="btn blue" href="#games" data-i18n="playGamesBtn">🎮 Play the Games</a>
+    </div>
+  </div>
+
+  <!-- ================= PHOTOBOOTH PROMO ================= -->
+  <div id="photobooth">
+    <div class="photobooth-card">
+      <img src="erise-camera-logo.png" alt="e-Rise Photobooth">
+      <div class="photobooth-text">
+        <h3 data-i18n="photoboothTitle">📸 We Have a Photobooth Too!</h3>
+        <p data-i18n="photoboothBody">Snap a festival memory at our photobooth!</p>
+        <a class="btn yellow" href="https://e-rise-photobooth-wakuwaku-summer-day.ai.studio/" id="photoboothBtn" data-i18n="photoboothBtn">Take a Photo ➜</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= DATES ================= -->
+  <div id="dates">
+    <h2 class="section-title" data-i18n="datesSectionTitle">Event Dates</h2>
+    <div class="dates-card">
+      <div class="dates-badge"><span class="small" data-i18n="chooseLabel">Choose</span><span class="big" data-i18n="twoDatesLabel">2 Dates!</span></div>
+      <div class="dates-grid">
+        <div class="date-item"><div class="d" id="ed-date1">8/8（土）</div><div data-i18n="afternoonLabel">Afternoon</div><div class="dl" id="ed-date1Deadline">Deadline: Aug 4 (Tue)</div></div>
+        <div class="dates-divider"></div>
+        <div class="date-item"><div class="d" id="ed-date2">8/22（土）</div><div data-i18n="afternoonLabel2">Afternoon</div><div class="dl" id="ed-date2Deadline">Deadline: Aug 4 (Tue)</div></div>
+      </div>
+      <div class="dates-note" id="ed-datesNote">*Pick either date — coming to both is OK too!</div>
+    </div>
+  </div>
+
+  <!-- ================= PROGRAMS ================= -->
+  <div id="programs">
+    <h2 class="section-title" data-i18n="programsTitle">3 Fun Programs!</h2>
+    <div class="program-grid">
+      <div class="program-card p1">
+        <div class="program-head" id="ed-program1Title">Exciting English Talk</div>
+        <div class="program-visual">💬</div>
+        <div class="program-body" id="ed-program1Desc">Enjoy speaking English through games and quizzes!</div>
+      </div>
+      <div class="program-card p2">
+        <div class="program-head" id="ed-program2Title">Minecraft Typing Battle!</div>
+        <div class="program-visual">⌨️</div>
+        <div class="program-body" id="ed-program2Desc">A typing showdown in the world of Minecraft! How many characters can you type?</div>
+      </div>
+      <div class="program-card p3">
+        <div class="program-head" id="ed-program3Title">Snack Time</div>
+        <div class="program-visual">🧃</div>
+        <div class="program-body" id="ed-program3Desc">Everyone take a relaxing break and chat together!</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="beginner-banner">
+    <div class="badge-title">🔰 <span data-i18n="beginnerTitle">Beginners Welcome!</span></div>
+    <div class="sub" data-i18n="beginnerSub">First-timers can join with total peace of mind.</div>
+  </div>
+
+  <!-- ================= CLASS SCHEDULE + CONDITIONS ================= -->
+  <div id="logistics">
+    <div class="logistics-grid">
+      <div class="logistics-card">
+        <div class="logistics-head" data-i18n="classTableTitle">We Group Students by Level!</div>
+        <div class="logistics-body">
+          <div class="class-sub" data-i18n="classTableSub">Each class is about 80 minutes</div>
+          <div class="class-row"><div class="class-badge a">A</div><div class="class-time" id="ed-classATime">13:00〜14:20</div><div class="class-desc" id="ed-classADesc">No English conversation experience</div></div>
+          <div class="class-row"><div class="class-badge b">B</div><div class="class-time" id="ed-classBTime">14:00〜15:20</div><div class="class-desc" id="ed-classBDesc">1-2 years of experience</div></div>
+          <div class="class-row"><div class="class-badge c">C</div><div class="class-time" id="ed-classCTime">15:00〜16:20</div><div class="class-desc" id="ed-classCDesc">3-4 years of experience</div></div>
+          <div class="class-row"><div class="class-badge d">D</div><div class="class-time" id="ed-classDTime">16:00〜17:20</div><div class="class-desc" id="ed-classDDesc">More than that</div></div>
+        </div>
+      </div>
+      <div class="logistics-card">
+        <div class="logistics-head" data-i18n="conditionsTitle">How to Join</div>
+        <div class="conditions-body">
+          <div class="fee-label" data-i18n="feeLabel">Participation Fee</div>
+          <div class="fee-value" id="ed-feeValue">FREE</div>
+          <div class="age-condition" id="ed-ageCondition">Open to anyone from the final year of kindergarten through high school!</div>
+          <div class="capacity-note" id="ed-capacityNote">*Registration closes once capacity is reached</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= GAMES (built from siteData.games) ================= -->
+  <div id="games">
+    <h2 class="section-title" data-i18n="gamesSectionTitle">Play Online, Too!</h2>
+    <p class="section-sub" data-i18n="gamesSectionSub">Great practice for Typing Battle day</p>
+    <div class="games-intro" data-i18n="gamesIntro">The Typing Battle doesn't have to end when the event does — practice the same kind of games at home anytime!</div>
+
+    <div class="mode-title"><span class="pill">⌨️</span><span data-i18n="typeModeTitle">Typing Challenge</span></div>
+    <div class="game-grid" id="gameGridType"><div class="game-card">
+      
+      <div class="ribbon" style="background:var(--pink);">NEW</div>
+      <div class="icon">🎯</div>
+      <h3>Wanage Game</h3>
+      <p>Type the word in time to toss your ring and win!</p>
+      <a class="btn" href="e-rise-wanage-game.html" target="_blank" style="background:linear-gradient(180deg, var(--pink), color-mix(in srgb, var(--pink) 65%, black));
+                box-shadow:0 5px 0 color-mix(in srgb, var(--pink) 45%, black), 0 8px 16px rgba(0,0,0,.2);">
+        Play Now ➜
+      </a></div><div class="game-card">
+      
+      <div class="ribbon" style="background:var(--blue);">FUN</div>
+      <div class="icon">🎣</div>
+      <h3>Fishing Game</h3>
+      <p>Cast your line and type fast to reel in your catch!</p>
+      <a class="btn" href="e-rise-fishing-game.html" target="_blank" style="background:linear-gradient(180deg, var(--blue), color-mix(in srgb, var(--blue) 65%, black));
+                box-shadow:0 5px 0 color-mix(in srgb, var(--blue) 45%, black), 0 8px 16px rgba(0,0,0,.2);">
+        Play Now ➜
+      </a></div><div class="game-card">
+      
+      <div class="ribbon" style="background:var(--orange);">POPULAR</div>
+      <div class="icon">🔫</div>
+      <h3>Target Shooting</h3>
+      <p>Finish typing in time to fire and knock down the target!</p>
+      <a class="btn" href="e-rise-shooting-game.html" target="_blank" style="background:linear-gradient(180deg, var(--orange), color-mix(in srgb, var(--orange) 65%, black));
+                box-shadow:0 5px 0 color-mix(in srgb, var(--orange) 45%, black), 0 8px 16px rgba(0,0,0,.2);">
+        Play Now ➜
+      </a></div><div class="game-card">
+      
+      <div class="ribbon" style="background:var(--pink);">Fun!</div>
+      <div class="icon">🎪</div>
+      <h3>Carnival Game</h3>
+      <p></p>
+      <a class="btn" href="https://e-rise-carnival-game-rmx.ai.studio/" target="_blank" style="background:linear-gradient(180deg, var(--pink), color-mix(in srgb, var(--pink) 65%, black));
+                box-shadow:0 5px 0 color-mix(in srgb, var(--pink) 45%, black), 0 8px 16px rgba(0,0,0,.2);">
+        Play Now ➜
+      </a></div><div class="game-card">
+      
+      <div class="ribbon" style="background:var(--pink);"></div>
+      <div class="icon">🎮</div>
+      <h3>Shuffle and Roulette Game!</h3>
+      <p></p>
+      <a class="btn" href="https://e-rise-english-roulette-shuffler-bingo-etc-rmx.ai.studio/" target="_blank" style="background:linear-gradient(180deg, var(--pink), color-mix(in srgb, var(--pink) 65%, black));
+                box-shadow:0 5px 0 color-mix(in srgb, var(--pink) 45%, black), 0 8px 16px rgba(0,0,0,.2);">
+        Play Now ➜
+      </a></div></div>
+
+    <div class="mode-title"><span class="pill">👆</span><span data-i18n="choiceModeTitle">Tap &amp; Play</span></div>
+    <div class="game-grid" id="gameGridChoice"><div class="game-card">
+      
+      <div class="ribbon" style="background:var(--pink);">EASY</div>
+      <div class="icon">🎯</div>
+      <h3>Wanage - Tap &amp; Play</h3>
+      <p>Listen and tap the matching target — no typing!</p>
+      <a class="btn" href="e-rise-wanage-choice-game.html" target="_blank" style="background:linear-gradient(180deg, var(--pink), color-mix(in srgb, var(--pink) 65%, black));
+                box-shadow:0 5px 0 color-mix(in srgb, var(--pink) 45%, black), 0 8px 16px rgba(0,0,0,.2);">
+        Play Now ➜
+      </a></div><div class="game-card">
+      
+      <div class="ribbon" style="background:var(--blue);">EASY</div>
+      <div class="icon">🎣</div>
+      <h3>Fishing - Tap &amp; Play</h3>
+      <p>Listen and tap the matching catch — no typing!</p>
+      <a class="btn" href="e-rise-fishing-choice-game.html" target="_blank" style="background:linear-gradient(180deg, var(--blue), color-mix(in srgb, var(--blue) 65%, black));
+                box-shadow:0 5px 0 color-mix(in srgb, var(--blue) 45%, black), 0 8px 16px rgba(0,0,0,.2);">
+        Play Now ➜
+      </a></div><div class="game-card">
+      
+      <div class="ribbon" style="background:var(--orange);">EASY</div>
+      <div class="icon">🔫</div>
+      <h3>Shooting - Tap &amp; Play</h3>
+      <p>Listen and tap the matching prize — no typing!</p>
+      <a class="btn" href="e-rise-shooting-choice-game.html" target="_blank" style="background:linear-gradient(180deg, var(--orange), color-mix(in srgb, var(--orange) 65%, black));
+                box-shadow:0 5px 0 color-mix(in srgb, var(--orange) 45%, black), 0 8px 16px rgba(0,0,0,.2);">
+        Play Now ➜
+      </a></div><div class="game-card">
+      
+      <div class="ribbon" style="background:var(--pink);">Fun!</div>
+      <div class="icon">🎪🎡🎪</div>
+      <h3>Circus &amp; Carnival</h3>
+      <p>Let's speak English using a fun carnival game theme!</p>
+      <a class="btn" href="https://e-rise-carnival-game-rmx.ai.studio/" target="_blank" style="background:linear-gradient(180deg, var(--pink), color-mix(in srgb, var(--pink) 65%, black));
+                box-shadow:0 5px 0 color-mix(in srgb, var(--pink) 45%, black), 0 8px 16px rgba(0,0,0,.2);">
+        Play Now ➜
+      </a></div></div>
+	
+    <div class="mode-title"><span class="pill">👩‍🏫</span><span data-i18n="teacherModeTitle">せんせいと</span></div>
+    <div class="game-grid" id="gameGridChoice"></div>	
+  </div>
+
+  <svg viewBox="0 0 1200 60" preserveAspectRatio="none" style="display:block;width:100%;height:50px;margin-top:-2px;"><path d="M0,30 C300,70 900,-10 1200,30 L1200,60 L0,60 Z" fill="rgba(0,0,0,0.06)"></path></svg>
+
+  <!-- ================= ABOUT ================= -->
+  <div id="about">
+    <h2 class="section-title" data-i18n="aboutSectionTitle">About Our School</h2>
+    <p class="section-sub" data-i18n="aboutSectionSub">Why families choose us</p>
+    <div class="about-card">
+      <div class="about-text">
+        <h2 data-i18n="aboutTitle">English + Programming, together</h2>
+        <p data-i18n="aboutBody">Our teachers spent eight years teaching English conversation at Eishunjuku, a prep school in Makino. To offer an even more advanced English education, we opened e-Rise in Kuzuha — combining the strengths of English-conversation teaching and exam-prep methodology for your child.</p>
+        <ul class="feature-list" id="featureList"><li><span class="tick">✓</span><span>Phonics, for preschoolers through junior high schoolers</span></li><li><span class="tick">✓</span><span>Speaking &amp; Listening built around real conversation</span></li><li><span class="tick">✓</span><span>Reading &amp; Writing with a strong grammar foundation</span></li><li><span class="tick">✓</span><span>Eiken® test preparation, Grades 5 through 2</span></li></ul>
+        <a class="btn blue" id="enrollBtnAbout" href="https://www.erise-school.com/" data-i18n="enrollBtn">See Enrollment Info</a>
+      </div>
+      <div class="about-photo" id="aboutPhotoSlot">🏫✨</div>
+    </div>
+  </div>
+
+  <!-- ================= MEDIA GALLERY (built from siteData.media) ================= -->
+  <div id="gallery">
+    <h2 class="section-title" data-i18n="galleryTitle">Festival Moments</h2>
+    <p class="section-sub" data-i18n="gallerySub">Add your own photos and videos here</p>
+    <div class="media-grid" id="mediaGrid"><div class="media-item">
+      
+      <div class="media-frame"><img src="e-Rise_わくわくSummerDay インスタ宣伝用 (FINAL).png" alt="Event poster"></div>
+      <div class="media-caption">Waku Waku Summer Day poster</div></div><div class="media-item">
+      
+      <div class="media-frame"><video src="Teacher Carla - erise animaion - welcome.mp4" controls=""></video></div>
+      <div class="media-caption"></div></div><div class="media-item">
+      
+      <div class="media-frame"><video src="Teacher Carla - erise animation - thank u.mp4" controls=""></video></div>
+      <div class="media-caption"></div></div></div>
+  </div>
+
+  <!-- ================= CONTACT ================= -->
+  <div id="contact">
+    <h2 class="section-title" data-i18n="contactTitle">Get in Touch</h2>
+    <p class="section-sub" data-i18n="contactSub">Reach out any time</p>
+    <div class="contact-grid">
+      <div class="contact-item"><div class="label" id="addressLabel">📍 Address</div><div class="value" id="addressValue">Kuzuha, Hirakata City, Osaka — please add your full address</div></div>
+      <div class="contact-item"><div class="label" id="phoneLabel">📞 Phone</div><div class="value" id="phoneValue">Please add your phone number</div></div>
+      <div class="contact-item"><div class="label" id="emailLabel">✉️ Email</div><div class="value" id="emailValue">Please add your email</div></div>
+      <div class="contact-item"><div class="label" id="websiteLabel">🌐 Website</div><div class="value" id="websiteValue">https://www.erise-school.com/</div></div>
+    </div>
+  </div>
+
+  <footer>
+    <img src="waku-waku-title.png" alt="わくわく Summer Day">
+    <div data-i18n="footerText">© 2026 e-Rise — Made with care for Waku Waku Summer Day</div>
+  </footer>
+</div>
+
+<!-- ================= MODALS ================= -->
+<div class="modal-overlay" id="gameModalOverlay">
+  <div class="modal-panel">
+    <h2 id="gameModalTitle">➕ Add Game</h2>
+    <input type="hidden" id="gm-editIndex" value="-1">
+    <div class="form-row"><label>Mode</label>
+      <select id="gm-mode"><option value="type">Typing Challenge</option><option value="choice">Tap &amp; Play</option><option value="choice">With Teacher</option></select>
+    </div>
+    <div class="form-row-2">
+      <div class="form-row"><label>Icon (emoji)</label><input type="text" id="gm-icon" placeholder="🎯"></div>
+      <div class="form-row"><label>Accent Color</label><input type="text" id="gm-accent" placeholder="var(--pink) or #ff0000"></div>
+    </div>
+    <div class="form-row"><label>Link (filename of the game's HTML file)</label><input type="text" id="gm-link" placeholder="e-rise-wanage-game.html"></div>
+    <div class="form-row-2">
+      <div class="form-row"><label>Ribbon (Japanese)</label><input type="text" id="gm-ribbonJp" placeholder="新登場"></div>
+      <div class="form-row"><label>Ribbon (English)</label><input type="text" id="gm-ribbonEn" placeholder="NEW"></div>
+    </div>
+    <div class="form-row-2">
+      <div class="form-row"><label>Title (Japanese)</label><input type="text" id="gm-titleJp"></div>
+      <div class="form-row"><label>Title (English)</label><input type="text" id="gm-titleEn"></div>
+    </div>
+    <div class="form-row-2">
+      <div class="form-row"><label>Description (Japanese)</label><textarea id="gm-descJp"></textarea></div>
+      <div class="form-row"><label>Description (English)</label><textarea id="gm-descEn"></textarea></div>
+    </div>
+    <div class="modal-actions">
+      <button class="cancel-btn" onclick="closeModal('gameModalOverlay')">Cancel</button>
+      <button class="save-btn" onclick="saveGame()">💾 Save Game</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="mediaModalOverlay">
+  <div class="modal-panel">
+    <h2 id="mediaModalTitle">✏️ Edit Photo/Video</h2>
+    <input type="hidden" id="md-editIndex" value="0">
+    <div class="form-row"><label>Type</label>
+      <select id="md-type" onchange="updateMediaFormLabels()"><option value="image">Photo/Poster</option><option value="youtube">YouTube Video</option><option value="video">Uploaded Video File</option></select>
+    </div>
+    <div class="form-row"><label id="md-srcLabel">Image filename or URL</label><input type="text" id="md-src" placeholder="photo.jpg"></div>
+    <div class="form-row"><label>Alt text (for photos)</label><input type="text" id="md-alt"></div>
+    <div class="form-row-2">
+      <div class="form-row"><label>Caption (Japanese)</label><input type="text" id="md-captionJp"></div>
+      <div class="form-row"><label>Caption (English)</label><input type="text" id="md-captionEn"></div>
+    </div>
+    <div class="modal-actions">
+      <button class="cancel-btn" onclick="closeModal('mediaModalOverlay')">Cancel</button>
+      <button class="save-btn" onclick="saveMedia()">💾 Save</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="eventModalOverlay">
+  <div class="modal-panel">
+    <h2>📝 Edit Event Details</h2>
+    <div id="eventFormFields"></div>
+    <div class="modal-actions">
+      <button class="cancel-btn" onclick="closeModal('eventModalOverlay')">Cancel</button>
+      <button class="save-btn" onclick="saveEventDetails()">💾 Save Details</button>
+    </div>
+  </div>
+</div>
+
+<!-- ================================================================
+     💾 SITE DATA — all editable content lives here as JSON, so the
+     visual editor (and the "Download Updated Page" button) can read
+     and rewrite it directly. You can also just edit this JSON by hand.
+     ================================================================ -->
+<script type="application/json" id="siteDataScript">{
+  "editPin": "1234",
+  "games": [
+    {
+      "mode": "type",
+      "icon": "🎯",
+      "link": "e-rise-wanage-game.html",
+      "accent": "var(--pink)",
+      "ribbon": {
+        "jp": "新登場",
+        "en": "NEW"
+      },
+      "title": {
+        "jp": "わなげゲーム",
+        "en": "Wanage Game"
+      },
+      "desc": {
+        "jp": "制限時間内に単語をタイプして輪を投げよう！",
+        "en": "Type the word in time to toss your ring and win!"
+      }
+    },
+    {
+      "mode": "type",
+      "icon": "🎣",
+      "link": "e-rise-fishing-game.html",
+      "accent": "var(--blue)",
+      "ribbon": {
+        "jp": "人気",
+        "en": "FUN"
+      },
+      "title": {
+        "jp": "魚釣りゲーム",
+        "en": "Fishing Game"
+      },
+      "desc": {
+        "jp": "お祭りの池で釣り糸を垂らそう！素早くタイプして釣り上げよう。",
+        "en": "Cast your line and type fast to reel in your catch!"
+      }
+    },
+    {
+      "mode": "type",
+      "icon": "🔫",
+      "link": "e-rise-shooting-game.html",
+      "accent": "var(--orange)",
+      "ribbon": {
+        "jp": "大人気",
+        "en": "POPULAR"
+      },
+      "title": {
+        "jp": "射的ゲーム",
+        "en": "Target Shooting"
+      },
+      "desc": {
+        "jp": "制限時間内にタイプを終えて発射し、的を落とそう！",
+        "en": "Finish typing in time to fire and knock down the target!"
+      }
+    },
+    {
+      "mode": "choice",
+      "icon": "🎯",
+      "link": "e-rise-wanage-choice-game.html",
+      "accent": "var(--pink)",
+      "ribbon": {
+        "jp": "かんたん",
+        "en": "EASY"
+      },
+      "title": {
+        "jp": "わなげ タップ版",
+        "en": "Wanage - Tap & Play"
+      },
+      "desc": {
+        "jp": "単語を聞いて、合う的をタップ！タイピング不要。",
+        "en": "Listen and tap the matching target — no typing!"
+      }
+    },
+    {
+      "mode": "choice",
+      "icon": "🎣",
+      "link": "e-rise-fishing-choice-game.html",
+      "accent": "var(--blue)",
+      "ribbon": {
+        "jp": "かんたん",
+        "en": "EASY"
+      },
+      "title": {
+        "jp": "魚釣り タップ版",
+        "en": "Fishing - Tap & Play"
+      },
+      "desc": {
+        "jp": "単語を聞いて、合う獲物をタップ！タイピング不要。",
+        "en": "Listen and tap the matching catch — no typing!"
+      }
+    },
+    {
+      "mode": "choice",
+      "icon": "🔫",
+      "link": "e-rise-shooting-choice-game.html",
+      "accent": "var(--orange)",
+      "ribbon": {
+        "jp": "かんたん",
+        "en": "EASY"
+      },
+      "title": {
+        "jp": "射的 タップ版",
+        "en": "Shooting - Tap & Play"
+      },
+      "desc": {
+        "jp": "単語を聞いて、合う景品をタップ！タイピング不要。",
+        "en": "Listen and tap the matching prize — no typing!"
+      }
+    },
+    {
+      "mode": "type",
+      "icon": "🎪",
+      "accent": "var(--pink)",
+      "link": "https://e-rise-carnival-game-rmx.ai.studio/",
+      "ribbon": {
+        "jp": "楽しい",
+        "en": "Fun!"
+      },
+      "title": {
+        "jp": "カーニバルゲーム",
+        "en": "Carnival Game"
+      },
+      "desc": {
+        "jp": "",
+        "en": ""
+      }
+    },
+    {
+      "mode": "choice",
+      "icon": "🎪🎡🎪",
+      "accent": "var(--pink)",
+      "link": "https://e-rise-carnival-game-rmx.ai.studio/",
+      "ribbon": {
+        "jp": "楽しい",
+        "en": "Fun!"
+      },
+      "title": {
+        "jp": "サークス＆カーニバル　",
+        "en": "Circus & Carnival"
+      },
+      "desc": {
+        "jp": "",
+        "en": "Let's speak English using a fun carnival game theme!"
+      }
+    },
+    {
+      "mode": "type",
+      "icon": "🎮",
+      "accent": "var(--pink)",
+      "link": "https://e-rise-english-roulette-shuffler-bingo-etc-rmx.ai.studio/",
+      "ribbon": {
+        "jp": "",
+        "en": ""
+      },
+      "title": {
+        "jp": "シャッフル＆ルーレットゲーム！",
+        "en": "Shuffle and Roulette Game!"
+      },
+      "desc": {
+        "jp": "",
+        "en": ""
+      }
+    }
+  ],
+  "media": [
+    {
+      "type": "image",
+      "src": "e-Rise_わくわくSummerDay インスタ宣伝用 (FINAL).png",
+      "id": "",
+      "alt": "Event poster",
+      "caption": {
+        "jp": "わくわく Summer Day ポスター",
+        "en": "Waku Waku Summer Day poster"
+      }
+    },
+    {
+      "type": "video",
+      "src": "Teacher Carla - erise animaion - welcome.mp4",
+      "id": "",
+      "alt": "",
+      "caption": {
+        "jp": "",
+        "en": ""
+      }
+    },
+    {
+      "type": "video",
+      "src": "Teacher Carla - erise animation - thank u.mp4",
+      "id": "",
+      "alt": "",
+      "caption": {
+        "jp": "",
+        "en": ""
+      }
+    }
+  ],
+  "eventDetails": {
+    "taglineJp": "e-Rise夏の特別イベント。英語も、プログラミングも、おやつも！みんなで楽しもう。",
+    "taglineEn": "e-Rise's special summer event — English, programming, and snacks! Let's have fun together.",
+    "date1": "8/8（土）",
+    "date1DeadlineJp": "締切：8月4日（火）",
+    "date1DeadlineEn": "Deadline: Aug 4 (Tue)",
+    "date2": "8/22（土）",
+    "date2DeadlineJp": "締切：8月4日（火）",
+    "date2DeadlineEn": "Deadline: Aug 4 (Tue)",
+    "datesNoteJp": "※日程は選択制。2回きてもOK！",
+    "datesNoteEn": "*Pick either date — coming to both is OK too!",
+    "program1TitleJp": "英語でワクワクトーク",
+    "program1TitleEn": "Exciting English Talk",
+    "program1DescJp": "ゲームやクイズで、英語を楽しく話してみよう！",
+    "program1DescEn": "Enjoy speaking English through games and quizzes!",
+    "program2TitleJp": "マイクラ タイピングバトル！",
+    "program2TitleEn": "Minecraft Typing Battle!",
+    "program2DescJp": "マイクラの世界でタイピング対決！きみは何文字打てるかな？",
+    "program2DescEn": "A typing showdown in the world of Minecraft! How many characters can you type?",
+    "program3TitleJp": "おやつタイム♪",
+    "program3TitleEn": "Snack Time",
+    "program3DescJp": "みんなでほっと一息♪楽しくおしゃべりしよう！",
+    "program3DescEn": "Everyone take a relaxing break and chat together!",
+    "classATime": "13:00〜14:20",
+    "classADescJp": "英会話未経験",
+    "classADescEn": "No English conversation experience",
+    "classBTime": "14:00〜15:20",
+    "classBDescJp": "英会話1・2年経験",
+    "classBDescEn": "1-2 years of experience",
+    "classCTime": "15:00〜16:20",
+    "classCDescJp": "英会話3・4年経験",
+    "classCDescEn": "3-4 years of experience",
+    "classDTime": "16:00〜17:20",
+    "classDDescJp": "それ以上",
+    "classDDescEn": "More than that",
+    "feeValueJp": "無料",
+    "feeValueEn": "FREE",
+    "ageConditionJp": "年長〜高校生であれば、だれでも参加OK！",
+    "ageConditionEn": "Open to anyone from the final year of kindergarten through high school!",
+    "capacityNoteJp": "※定員になり次第、締め切り",
+    "capacityNoteEn": "*Registration closes once capacity is reached"
+  },
+  "contact": {
+    "address": "Kuzuha, Hirakata City, Osaka — please add your full address",
+    "phone": "Please add your phone number",
+    "email": "Please add your email",
+    "website": "https://www.erise-school.com/",
+    "enrollLink": "https://www.erise-school.com/",
+    "photoboothLink": "https://e-rise-photobooth-wakuwaku-summer-day.ai.studio/"
+  }
+}</script>
+
+<script>
+/* ================================================================
+   ⚙️ RENDER ENGINE + EDIT MODE
+   ================================================================ */
+
+/* ---- Load site data: localStorage override (if the admin has saved
+   edits on this browser) takes priority over the embedded JSON. ---- */
+const DEFAULT_SITE_DATA = JSON.parse(document.getElementById('siteDataScript').textContent);
+let siteData = JSON.parse(JSON.stringify(DEFAULT_SITE_DATA));
+try{
+  const saved = localStorage.getItem('erise_site_data');
+  if(saved){ siteData = JSON.parse(saved); }
+}catch(e){}
+
+/* ---- Template text (rarely-changed UI labels — not part of the visual editor) ---- */
+const LANG = {
+  jp: {
+    langButton:"English", seeDatesBtn:"📅 日程をチェック", playGamesBtn:"🎮 ゲームで遊ぶ",
+    photoboothTitle:"📸 フォトブースもあるよ！", photoboothBody:"お祭りの思い出に、フォトブースで写真を撮ろう！", photoboothBtn:"写真を撮る ➜",
+    datesSectionTitle:"日程", chooseLabel:"選べる", twoDatesLabel:"2日程！", afternoonLabel:"午後", afternoonLabel2:"午後",
+    programsTitle:"3つの楽しいプログラム！", beginnerTitle:"初心者でも大丈夫！", beginnerSub:"はじめての子も安心して参加できます！",
+    classTableTitle:"クラス分けをして行います！", classTableSub:"1クラス80分程度", conditionsTitle:"参加条件", feeLabel:"参加費",
+    gamesSectionTitle:"オンラインでも遊べる！", gamesSectionSub:"タイピングバトルの練習にぴったり",
+    gamesIntro:"タイピングバトルは当日だけのお楽しみではありません。おうちでも同じ雰囲気のゲームで練習できます！",
+    typeModeTitle:"タイピングチャレンジ", choiceModeTitle:"タップして遊ぼう", playNow:"遊んでみる ➜",
+    aboutSectionTitle:"当校について", aboutSectionSub:"選ばれる理由", aboutTitle:"英会話とプログラミングを、ひとつに",
+    aboutBody:"私たちは牧野の進学塾「英駿塾」にて8年間、英会話を指導してまいりました。より高度な英語教育を提供するため、楠葉にe-Riseを開校。英会話と進学塾指導、それぞれの強みを組み合わせた英語教育をお子様に提供しています。",
+    features:["フォニックス：幼児から中学生まで対応","実践的な会話力を養うスピーキング＆リスニング","文法の土台をしっかり作るリーディング＆ライティング","英検®対策：5級〜準2級"],
+    enrollBtn:"入会案内を見る", galleryTitle:"お祭りの思い出", gallerySub:"写真や動画を追加できます",
+    contactTitle:"お問い合わせ", contactSub:"お気軽にどうぞ",
+    addressLabel:"📍 住所", phoneLabel:"📞 電話番号", emailLabel:"✉️ メール", websiteLabel:"🌐 ウェブサイト",
+    footerText:"© 2026 e-Rise — わくわく Summer Day のために心を込めて制作"
+  },
+  en: {
+    langButton:"日本語", seeDatesBtn:"📅 See the Dates", playGamesBtn:"🎮 Play the Games",
+    photoboothTitle:"📸 We Have a Photobooth Too!", photoboothBody:"Snap a festival memory at our photobooth!", photoboothBtn:"Take a Photo ➜",
+    datesSectionTitle:"Event Dates", chooseLabel:"Choose", twoDatesLabel:"2 Dates!", afternoonLabel:"Afternoon", afternoonLabel2:"Afternoon",
+    programsTitle:"3 Fun Programs!", beginnerTitle:"Beginners Welcome!", beginnerSub:"First-timers can join with total peace of mind.",
+    classTableTitle:"We Group Students by Level!", classTableSub:"Each class is about 80 minutes", conditionsTitle:"How to Join", feeLabel:"Participation Fee",
+    gamesSectionTitle:"Play Online, Too!", gamesSectionSub:"Great practice for Typing Battle day",
+    gamesIntro:"The Typing Battle doesn't have to end when the event does — practice the same kind of games at home anytime!",
+    typeModeTitle:"Typing Challenge", choiceModeTitle:"Tap & Play", playNow:"Play Now ➜",
+    aboutSectionTitle:"About Our School", aboutSectionSub:"Why families choose us", aboutTitle:"English + Programming, together",
+    aboutBody:"Our teachers spent eight years teaching English conversation at Eishunjuku, a prep school in Makino. To offer an even more advanced English education, we opened e-Rise in Kuzuha — combining the strengths of English-conversation teaching and exam-prep methodology for your child.",
+    features:["Phonics, for preschoolers through junior high schoolers","Speaking & Listening built around real conversation","Reading & Writing with a strong grammar foundation","Eiken® test preparation, Grades 5 through 2"],
+    enrollBtn:"See Enrollment Info", galleryTitle:"Festival Moments", gallerySub:"Add your own photos and videos here",
+    contactTitle:"Get in Touch", contactSub:"Reach out any time",
+    addressLabel:"📍 Address", phoneLabel:"📞 Phone", emailLabel:"✉️ Email", websiteLabel:"🌐 Website",
+    footerText:"© 2026 e-Rise — Made with care for Waku Waku Summer Day"
+  }
+};
+
+/* Field groups for the "Edit Event Details" form AND for rendering ed-* elements */
+const EVENT_FIELD_GROUPS = [
+  { title:"Tagline", fields:[ {key:'tagline', label:'Tagline', type:'textarea', bilingual:true} ] },
+  { title:"Dates", fields:[
+    {key:'date1', label:'Date 1 (e.g. 8/8（土）)', type:'text', bilingual:false},
+    {key:'date1Deadline', label:'Date 1 Deadline', type:'text', bilingual:true},
+    {key:'date2', label:'Date 2', type:'text', bilingual:false},
+    {key:'date2Deadline', label:'Date 2 Deadline', type:'text', bilingual:true},
+    {key:'datesNote', label:'Dates Note', type:'text', bilingual:true}
+  ]},
+  { title:"Programs", fields:[
+    {key:'program1Title', label:'Program 1 Title', type:'text', bilingual:true},
+    {key:'program1Desc', label:'Program 1 Description', type:'textarea', bilingual:true},
+    {key:'program2Title', label:'Program 2 Title', type:'text', bilingual:true},
+    {key:'program2Desc', label:'Program 2 Description', type:'textarea', bilingual:true},
+    {key:'program3Title', label:'Program 3 Title', type:'text', bilingual:true},
+    {key:'program3Desc', label:'Program 3 Description', type:'textarea', bilingual:true}
+  ]},
+  { title:"Class Schedule", fields:[
+    {key:'classATime', label:'Class A Time', type:'text', bilingual:false},
+    {key:'classADesc', label:'Class A Description', type:'text', bilingual:true},
+    {key:'classBTime', label:'Class B Time', type:'text', bilingual:false},
+    {key:'classBDesc', label:'Class B Description', type:'text', bilingual:true},
+    {key:'classCTime', label:'Class C Time', type:'text', bilingual:false},
+    {key:'classCDesc', label:'Class C Description', type:'text', bilingual:true},
+    {key:'classDTime', label:'Class D Time', type:'text', bilingual:false},
+    {key:'classDDesc', label:'Class D Description', type:'text', bilingual:true}
+  ]},
+  { title:"Fee & Conditions", fields:[
+    {key:'feeValue', label:'Fee', type:'text', bilingual:true},
+    {key:'ageCondition', label:'Age Condition', type:'textarea', bilingual:true},
+    {key:'capacityNote', label:'Capacity Note', type:'text', bilingual:true}
+  ]}
+];
+
+let currentLang = 'jp';
+let editMode = false;
+
+function toggleLang(){ currentLang = currentLang === 'jp' ? 'en' : 'jp'; renderPage(); }
+
+function renderPage(){
+  const L = LANG[currentLang];
+  document.documentElement.lang = currentLang === 'jp' ? 'ja' : 'en';
+
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const key = el.getAttribute('data-i18n');
+    if(L[key] !== undefined) el.textContent = L[key];
+  });
+
+  document.getElementById('langToggleBtn').textContent = L.langButton;
+  document.getElementById('enrollBtnTop').textContent = currentLang==='jp' ? '申し込む' : 'Register';
+  [document.getElementById('enrollBtnTop'), document.getElementById('enrollBtnAbout')]
+    .forEach(el => el.setAttribute('href', siteData.contact.enrollLink));
+  document.getElementById('photoboothBtn').setAttribute('href', siteData.contact.photoboothLink || '#');
+  document.getElementById('photoboothBtn').onclick = function(e){
+    if(!siteData.contact.photoboothLink){ e.preventDefault(); alert(currentLang==='jp' ? 'フォトブースは近日公開予定です！' : 'Photobooth link coming soon!'); }
+  };
+
+  document.getElementById('addressLabel').textContent = L.addressLabel;
+  document.getElementById('phoneLabel').textContent = L.phoneLabel;
+  document.getElementById('emailLabel').textContent = L.emailLabel;
+  document.getElementById('websiteLabel').textContent = L.websiteLabel;
+  document.getElementById('addressValue').textContent = siteData.contact.address;
+  document.getElementById('phoneValue').textContent = siteData.contact.phone;
+  document.getElementById('emailValue').textContent = siteData.contact.email;
+  document.getElementById('websiteValue').textContent = siteData.contact.website;
+
+  const fl = document.getElementById('featureList');
+  fl.innerHTML = '';
+  L.features.forEach(f=>{ const li=document.createElement('li'); li.innerHTML=`<span class="tick">✓</span><span>${f}</span>`; fl.appendChild(li); });
+
+  renderEventDetails();
+  renderGames();
+  renderMedia();
+}
+
+function renderEventDetails(){
+  const ed = siteData.eventDetails;
+  EVENT_FIELD_GROUPS.forEach(group=>{
+    group.fields.forEach(f=>{
+      const el = document.getElementById('ed-'+f.key);
+      if(!el) return;
+      if(f.bilingual){ el.textContent = ed[f.key + (currentLang==='jp'?'Jp':'En')] || ''; }
+      else { el.textContent = ed[f.key] || ''; }
+    });
+  });
+}
+
+function renderGames(){
+  const L = LANG[currentLang];
+  const typeGrid = document.getElementById('gameGridType');
+  const choiceGrid = document.getElementById('gameGridChoice');
+  typeGrid.innerHTML = ''; choiceGrid.innerHTML = '';
+  siteData.games.forEach((g, idx)=>{
+    const card = document.createElement('div');
+    card.className = 'game-card' + (editMode ? ' edit-mode' : '');
+    card.innerHTML = `
+      ${editMode ? `<div class="item-edit-controls"><button class="edit-btn" onclick="openGameModal(${idx})">✏️</button><button class="del-btn" onclick="deleteGame(${idx})">🗑️</button></div>` : ''}
+      <div class="ribbon" style="background:${g.accent};">${g.ribbon[currentLang]}</div>
+      <div class="icon">${g.icon}</div>
+      <h3>${g.title[currentLang]}</h3>
+      <p>${g.desc[currentLang]}</p>
+      <a class="btn" href="${g.link}" target="_blank"
+         style="background:linear-gradient(180deg, ${g.accent}, color-mix(in srgb, ${g.accent} 65%, black));
+                box-shadow:0 5px 0 color-mix(in srgb, ${g.accent} 45%, black), 0 8px 16px rgba(0,0,0,.2);">
+        ${L.playNow}
+      </a>`;
+    (g.mode === 'choice' ? choiceGrid : typeGrid).appendChild(card);
+  });
+}
+
+function renderMedia(){
+  const grid = document.getElementById('mediaGrid');
+  grid.innerHTML = '';
+  siteData.media.forEach((m, idx)=>{
+    const item = document.createElement('div');
+    item.className = 'media-item' + (editMode ? ' edit-mode' : '');
+    let inner = '📷';
+    if(m.type === 'image' && m.src){ inner = `<img src="${m.src}" alt="${m.alt || ''}">`; }
+    else if(m.type === 'video' && m.src){ inner = `<video src="${m.src}" controls></video>`; }
+    else if(m.type === 'youtube' && m.id){ inner = `<iframe src="https://www.youtube.com/embed/${m.id}" allowfullscreen title="video"></iframe>`; }
+    else if(m.type === 'youtube' || m.type === 'video'){ inner = '▶️'; }
+    item.innerHTML = `
+      ${editMode ? `<div class="item-edit-controls"><button class="edit-btn" onclick="openMediaModal(${idx})">✏️</button><button class="del-btn" onclick="deleteMedia(${idx})">🗑️</button></div>` : ''}
+      <div class="media-frame">${inner}</div>
+      <div class="media-caption">${m.caption ? m.caption[currentLang] : ''}</div>`;
+    grid.appendChild(item);
+  });
+  if(editMode){
+    const addCard = document.createElement('div');
+    addCard.className = 'add-card';
+    addCard.innerHTML = `<span class="plus">➕</span><span>Add Photo/Video</span>`;
+    addCard.onclick = () => openMediaModal();
+    grid.appendChild(addCard);
+  }
+}
+
+/* ---- Decorative background ---- */
+(function makeBokeh(){ const field=document.getElementById('bokeh'); const colors=['#e6337f','#ffd93d','#4caf50','#1e56c8','#f5941f']; for(let i=0;i<9;i++){ const g=document.createElement('div'); g.className='glow'; const size=90+Math.random()*150; g.style.width=size+'px'; g.style.height=size+'px'; g.style.left=Math.random()*100+'%'; g.style.top=Math.random()*100+'%'; g.style.background=colors[i%colors.length]; field.appendChild(g); } })();
+(function makeFloaters(){ const field=document.getElementById('floaters'); const emojis=['🌻','☀️','🐚','🌊','✨','🍧']; for(let i=0;i<14;i++){ const f=document.createElement('div'); f.className='floater'; f.textContent=emojis[i%emojis.length]; f.style.left=Math.random()*100+'%'; f.style.animationDuration=(14+Math.random()*10)+'s'; f.style.animationDelay=(Math.random()*14)+'s'; field.appendChild(f); } })();
+
+/* ================================================================
+   🔧 EDIT MODE
+   ================================================================ */
+function tryEnterEditMode(){
+  if(editMode){ exitEditMode(); return; }
+  const pin = prompt(currentLang==='jp' ? 'PINコードを入力してください：' : 'Enter the admin PIN:');
+  if(pin === null) return;
+  if(pin === siteData.editPin){
+    editMode = true;
+    document.getElementById('editToolbar').classList.add('active');
+    renderGames(); renderMedia();
+  } else {
+    alert(currentLang==='jp' ? 'PINが正しくありません。' : 'Incorrect PIN.');
+  }
+}
+function exitEditMode(){
+  editMode = false;
+  document.getElementById('editToolbar').classList.remove('active');
+  renderGames(); renderMedia();
+}
+function closeModal(id){ document.getElementById(id).classList.remove('active'); }
+function saveToLocalStorage(){
+  try{ localStorage.setItem('erise_site_data', JSON.stringify(siteData)); }catch(e){}
+}
+function resetToDefaults(){
+  if(!confirm(currentLang==='jp' ? '本当にすべての変更をリセットしますか？' : 'Really reset all changes back to the original defaults?')) return;
+  siteData = JSON.parse(JSON.stringify(DEFAULT_SITE_DATA));
+  localStorage.removeItem('erise_site_data');
+  renderPage();
+}
+
+/* ---- Game modal ---- */
+function openGameModal(index){
+  const isEdit = typeof index === 'number';
+  document.getElementById('gameModalTitle').textContent = isEdit ? '✏️ Edit Game' : '➕ Add Game';
+  document.getElementById('gm-editIndex').value = isEdit ? index : -1;
+  const g = isEdit ? siteData.games[index] : { mode:'type', icon:'', accent:'var(--pink)', link:'', ribbon:{jp:'',en:''}, title:{jp:'',en:''}, desc:{jp:'',en:''} };
+  document.getElementById('gm-mode').value = g.mode;
+  document.getElementById('gm-icon').value = g.icon;
+  document.getElementById('gm-accent').value = g.accent;
+  document.getElementById('gm-link').value = g.link;
+  document.getElementById('gm-ribbonJp').value = g.ribbon.jp;
+  document.getElementById('gm-ribbonEn').value = g.ribbon.en;
+  document.getElementById('gm-titleJp').value = g.title.jp;
+  document.getElementById('gm-titleEn').value = g.title.en;
+  document.getElementById('gm-descJp').value = g.desc.jp;
+  document.getElementById('gm-descEn').value = g.desc.en;
+  document.getElementById('gameModalOverlay').classList.add('active');
+}
+function saveGame(){
+  const idx = parseInt(document.getElementById('gm-editIndex').value, 10);
+  const g = {
+    mode: document.getElementById('gm-mode').value,
+    icon: document.getElementById('gm-icon').value || '🎮',
+    accent: document.getElementById('gm-accent').value || 'var(--pink)',
+    link: document.getElementById('gm-link').value || '#',
+    ribbon: { jp: document.getElementById('gm-ribbonJp').value, en: document.getElementById('gm-ribbonEn').value },
+    title: { jp: document.getElementById('gm-titleJp').value, en: document.getElementById('gm-titleEn').value },
+    desc: { jp: document.getElementById('gm-descJp').value, en: document.getElementById('gm-descEn').value }
+  };
+  if(idx >= 0){ siteData.games[idx] = g; } else { siteData.games.push(g); }
+  saveToLocalStorage(); closeModal('gameModalOverlay'); renderGames();
+}
+function deleteGame(idx){
+  if(!confirm('Delete this game?')) return;
+  siteData.games.splice(idx,1); saveToLocalStorage(); renderGames();
+}
+
+/* ---- Media modal ---- */
+function updateMediaFormLabels(){
+  const type = document.getElementById('md-type').value;
+  const label = document.getElementById('md-srcLabel');
+  if(type === 'youtube') label.textContent = 'YouTube Video ID';
+  else if(type === 'video') label.textContent = 'Video filename or URL';
+  else label.textContent = 'Image filename or URL';
+}
+function openMediaModal(index){
+  const isEdit = typeof index === 'number';
+  document.getElementById('mediaModalTitle').textContent = isEdit ? '✏️ Edit Photo/Video' : '➕ Add Photo/Video';
+  document.getElementById('md-editIndex').value = isEdit ? index : -1;
+  const m = isEdit ? siteData.media[index] : { type:'image', src:'', id:'', alt:'', caption:{jp:'',en:''} };
+  document.getElementById('md-type').value = m.type;
+  document.getElementById('md-src').value = m.type === 'youtube' ? (m.id||'') : (m.src||'');
+  document.getElementById('md-alt').value = m.alt || '';
+  document.getElementById('md-captionJp').value = m.caption ? m.caption.jp : '';
+  document.getElementById('md-captionEn').value = m.caption ? m.caption.en : '';
+  updateMediaFormLabels();
+  document.getElementById('mediaModalOverlay').classList.add('active');
+}
+function saveMedia(){
+  const idx = parseInt(document.getElementById('md-editIndex').value, 10);
+  const type = document.getElementById('md-type').value;
+  const srcVal = document.getElementById('md-src').value;
+  const m = {
+    type: type,
+    src: type !== 'youtube' ? srcVal : '',
+    id: type === 'youtube' ? srcVal : '',
+    alt: document.getElementById('md-alt').value,
+    caption: { jp: document.getElementById('md-captionJp').value, en: document.getElementById('md-captionEn').value }
+  };
+  if(idx >= 0){ siteData.media[idx] = m; } else { siteData.media.push(m); }
+  saveToLocalStorage(); closeModal('mediaModalOverlay'); renderMedia();
+}
+function deleteMedia(idx){
+  if(!confirm('Delete this item?')) return;
+  siteData.media.splice(idx,1); saveToLocalStorage(); renderMedia();
+}
+
+/* ---- Event details modal ---- */
+function openEventDetailsModal(){
+  const container = document.getElementById('eventFormFields');
+  container.innerHTML = '';
+  const ed = siteData.eventDetails;
+  EVENT_FIELD_GROUPS.forEach(group=>{
+    const h = document.createElement('div');
+    h.className = 'modal-group-title';
+    h.textContent = group.title;
+    container.appendChild(h);
+    group.fields.forEach(f=>{
+      if(f.bilingual){
+        const row = document.createElement('div');
+        row.className = 'form-row-2';
+        row.innerHTML = `
+          <div class="form-row"><label>${f.label} (JP)</label>${f.type==='textarea' ? `<textarea data-key="${f.key}Jp">${ed[f.key+'Jp']||''}</textarea>` : `<input type="text" data-key="${f.key}Jp" value="${(ed[f.key+'Jp']||'').replace(/"/g,'&quot;')}">`}</div>
+          <div class="form-row"><label>${f.label} (EN)</label>${f.type==='textarea' ? `<textarea data-key="${f.key}En">${ed[f.key+'En']||''}</textarea>` : `<input type="text" data-key="${f.key}En" value="${(ed[f.key+'En']||'').replace(/"/g,'&quot;')}">`}</div>
+        `;
+        container.appendChild(row);
+      } else {
+        const row = document.createElement('div');
+        row.className = 'form-row';
+        row.innerHTML = `<label>${f.label}</label><input type="text" data-key="${f.key}" value="${(ed[f.key]||'').replace(/"/g,'&quot;')}">`;
+        container.appendChild(row);
+      }
+    });
+  });
+  document.getElementById('eventModalOverlay').classList.add('active');
+}
+function saveEventDetails(){
+  const inputs = document.querySelectorAll('#eventFormFields [data-key]');
+  inputs.forEach(el=>{ siteData.eventDetails[el.getAttribute('data-key')] = el.value; });
+  saveToLocalStorage(); closeModal('eventModalOverlay'); renderEventDetails();
+}
+
+/* ---- Download a complete, updated standalone HTML file ---- */
+function downloadUpdatedPage(){
+  const wasEditMode = editMode;
+  editMode = false;
+  document.getElementById('editToolbar').classList.remove('active');
+  renderGames(); renderMedia();
+
+  document.getElementById('siteDataScript').textContent = JSON.stringify(siteData, null, 2);
+  const htmlContent = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+  const blob = new Blob([htmlContent], {type:'text/html'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'e-rise-landing-page.html';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+
+  if(wasEditMode){ editMode = true; document.getElementById('editToolbar').classList.add('active'); renderGames(); renderMedia(); }
+  alert(currentLang==='jp'
+    ? 'ダウンロードが完了しました！このファイルをウェブサイトにアップロードして公開してください。'
+    : 'Download complete! Upload this file to your website to make the changes go live.');
+}
+
+renderPage();
+</script>
+
+
+</body></html>
